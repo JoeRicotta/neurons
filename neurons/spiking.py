@@ -6,7 +6,14 @@ import functools
 
 class SRM:
     """ SRM_0 (Spike Response Model) """
-    def __init__(self, neurons, threshold, t_current, t_membrane, eta_reset, simulation_window_size=100, verbose=False):
+    def __init__(self,
+                 neurons,
+                 threshold,
+                 t_current,
+                 t_membrane,
+                 eta_reset,
+                 simulation_window_size=100,
+                 verbose=False):
         """
         Neurons can have different threshold, t_current, t_membrane and eta_resets: Set those variables to 1D np.arrays of all the same size.
 
@@ -107,19 +114,8 @@ class SRM:
 
         return matrix
 
-    def check_spikes(self, spiketrain, weights, t, additional_term=None):
-        """
-        Simulate one time step at time t. Changes the spiketrain in place at time t!
-        Return the total membrane potential of all neurons.
-
-        :param spiketrain: Spiketrain (Time indexing begins with 0)
-        :param weights: Weights
-        :param t: Evaluation time
-        :param additional_term: Additional potential that gets added before we check for spikes (For example for extern voltage)
-        :return: total membrane potential of all neurons at time step t (vector), spikes at time t
-        """
-
-        # Check correct user input
+    def _check_input(self, spiketrain, weights, t, additional_term=None):
+        """ Helper function to check for proper user input """
 
         if type(spiketrain) != np.ndarray:
             raise ValueError("Spiketrain should be a numpy array")
@@ -150,6 +146,22 @@ class SRM:
 
         if additional_term != None and len(additional_term) == 2 and additional_term.shape[1] != 1:
             raise ValueError("Additional_term should be a vector with one element for each neuron")
+        
+
+    def check_spikes(self, spiketrain, weights, t, additional_term=None):
+        """
+        Simulate one time step at time t. Changes the spiketrain in place at time t!
+        Return the total membrane potential of all neurons.
+
+        :param spiketrain: Spiketrain (Time indexing begins with 0)
+        :param weights: Weights
+        :param t: Evaluation time
+        :param additional_term: Additional potential that gets added before we check for spikes (For example for extern voltage)
+        :return: total membrane potential of all neurons at time step t (vector), spikes at time t
+        """
+
+        # clear user input for appropriateness
+        self._check_input(spiketrain, weights, t, additional_term)
 
         # Work on a windowed view
         spiketrain_window = spiketrain[:, max(0, t+1-self.simulation_window_size):t+1]
@@ -196,8 +208,18 @@ class SRM:
 
         return total_potential
 
+
+    
 class SRM_X(SRM):
-    def __init__(self, neurons, threshold, t_current, t_membrane, eta_reset, ax_delay, simulation_window_size=100, verbose=False):
+    def __init__(self,
+                 neurons,
+                 threshold,
+                 t_current,
+                 t_membrane,
+                 eta_reset,
+                 ax_delay,
+                 simulation_window_size=100,
+                 verbose=False):
         """
         Like the SRM model, but additionally it supports axonal delays.
 
@@ -216,7 +238,12 @@ class SRM_X(SRM):
         # Check user input
         # TODO
 
-        SRM.__init__(self, neurons, threshold, t_current, t_membrane, eta_reset, simulation_window_size=simulation_window_size,
+        super().__init__(neurons,
+                     threshold,
+                     t_current,
+                     t_membrane,
+                     eta_reset,
+                     simulation_window_size=simulation_window_size,
                      verbose=verbose)
 
         self.ax_delay = ax_delay
