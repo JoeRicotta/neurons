@@ -13,9 +13,14 @@ def test_jeffress():
     neurons = 11
     timesteps = 100
 
-    ax_delays = np.array([0, 5, 15, 25, 0, 25, 15, 5, 0, 0, 0])
-    model = spiking.SRM_X(neurons=neurons, threshold=np.array([1]*neurons), t_current=np.array([5]*neurons),
-                          t_membrane=np.array([10]*neurons), eta_reset=np.array([2.0]*neurons), ax_delay=ax_delays)
+    #ax_delays = np.array([0, 5, 15, 25, 0, 25, 15, 5, 0, 0, 0])
+    ax_delays = np.array([0,0,0,0,0,0,0,0,0,0,0])
+    model = spiking.SRM_X(neurons=neurons,
+                          threshold=np.array([1]*neurons),
+                          t_current=np.array([5]*neurons),
+                          t_membrane=np.array([10]*neurons),
+                          eta_reset=np.array([2.0]*neurons),
+                          ax_delay=ax_delays)
 
     weights = np.zeros((neurons, neurons))
 

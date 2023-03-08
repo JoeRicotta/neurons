@@ -114,6 +114,7 @@ class SRM:
 
         return matrix
 
+    
     def _check_input(self, spiketrain, weights, t, additional_term=None):
         """ Helper function to check for proper user input """
 
@@ -137,6 +138,7 @@ class SRM:
 
         if weights.shape[0] != self.neurons or self.neurons != weights.shape[1]:
             raise ValueError("Weigths should be a quadratic matrix, with one row and one column for each neuron")
+            #TODO: what in the world is a quadratic matrix?
 
         if spiketrain.shape[0] != self.neurons:
             raise ValueError("Spikes should be a matrix, with one row for each neuron")
@@ -159,6 +161,13 @@ class SRM:
         :param additional_term: Additional potential that gets added before we check for spikes (For example for extern voltage)
         :return: total membrane potential of all neurons at time step t (vector), spikes at time t
         """
+        # TODO:
+        # edit this function to accomodate an RL-style environment which steps one
+        # timestep at at time.
+        # implement a step function, and permit for an agent to individually select spikes in the spiketrain.
+        # also consider the development of a muscle model which will generate twitches based on the
+        # newfound spikes at each time step. Force, length and velocity output can be wired back into the network
+        # as well.
 
         # clear user input for appropriateness
         self._check_input(spiketrain, weights, t, additional_term)
